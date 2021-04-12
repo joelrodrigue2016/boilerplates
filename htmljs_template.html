@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript within HTML template </h2>
+
+<p>This example shows how to run js within Html</p>
+
+<p id="demo"></p>
+
+<script>
+  let sum = function(a,b) {
+    return a+b;
+  };
+var a = parseInt(prompt("First number "));
+var b = parseInt(prompt("Second number "));;
+
+document.getElementById("demo").innerHTML = sum(a,b);
+</script>
+
+</body>
+</html>
