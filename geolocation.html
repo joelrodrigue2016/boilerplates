@@ -1,75 +1,91 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
 
-<title>Leaflet Web Map</title>
+  <title>Mobile tutorial - Leaflet</title>
 
-   <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-      crossorigin=""
-    />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script
-      src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-      integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-      crossorigin=""
-    ></script>
+  <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 
-<style>
-#map {
-    width: 960px;
-    height:500px;
-}
-</style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    #map {
+      width: 600px;
+      height: 400px;
+    }
+  </style>
+
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    #map {
+      height:
+        100%;
+      width: 100vw;
+    }
+  </style>
 </head>
 
 <body>
-<h1> My Location </h1>
-    <div id="map"></div>
+  <p id="demo"></p>
+  <div id='map'></div>
 
-<script>
-var popup = L.popup();
-var map = L.map('map').setView([28.0821933, -82.57795279999999],10);
-mapLink =
-    '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; ' + mapLink + ' Contributors',
-    maxZoom: 25,
-    }).addTo(map);
+  <script>
+    var map = L.map('map').fitWorld();
 
-var marker = L.marker([28.0821933, -82.57795279999999],[26.0821933, -81.57795279999999])
-    .addTo(map);
-marker.bindPopup("<h3>Hello world!</b><br>This is my house").openPopup();
-var marker2 = L.marker([26.0821933, -81.57795279999999])
-        .addTo(map);
-marker2.bindPopup("<h3>This is a random place!</b><br>Bye.").openPopup();
-var circle = L.circle([28.0821933, -82.57795279999999], {
-  color: 'red',
-  fillColor: '#f03',
-  fillOpacity: 0.5,
-  radius: 500}).addTo(map);
+    var tiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }).addTo(map);;
 
-  var polygon = L.polygon([
-      [28.08, -82.67],
-      [28.0921933, -82.57],
-      [28.01, -82.58]
-  ]).addTo(map);
+    function onLocationFound(e) {
+      var radius = Math.round(((e.accuracy / 2) * 3.28084), 2);
+
+      var locationMarker = L.marker(e.latlng).addTo(map)
+        .bindPopup('<b>You are within</b> ' + radius + ' feet from this point').openPopup();
+
+      var locationCircle = L.circle(e.latlng, radius).addTo(map);
+    }
+
+    function onLocationError(e) {
+      alert(e.message);
+    }
+
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+
+    map.locate({
+      setView: true,
+      maxZoom: 16
+    });
+    
+    
+    
+
+      
+      function onMapClick(e) {
+    console.log("You clicked the map at " + e.latlng);
+}
+
+ map.on('click', onMapClick); 
+
+  </script>
 
 
-function onMapClick(e) {
-  popup.setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()).openOn(mymap);
-  }
-
-  mymap.on('click', onMapClick);
-
-
-</script>
 
 </body>
 
